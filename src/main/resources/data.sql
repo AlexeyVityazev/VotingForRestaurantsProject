@@ -14,3 +14,8 @@ VALUES ('soup'),
        ('potato'),
        ('chicken'),
        ('water');
+INSERT INTO RESTAURANT (name)
+VALUES ('Astoria'),
+       ('Italian'),
+       ('Tokio City'),
+       ('U Gali');
