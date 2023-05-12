@@ -19,7 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value =RestaurantController .REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class RestaurantController {
-    static final String REST_URL = "/api/admin/restaurant";
+    static final String REST_URL = "/api/restaurant";
     @Autowired
     private RestaurantRepository repository;
 
@@ -28,4 +28,7 @@ public class RestaurantController {
         log.info("getAll restaurants");
         return repository.findAll(Sort.by(Sort.Direction.ASC, "name"));
     }
+    @GetMapping("{rest_id}/date/{date}/menu")
+    public 
+
 }

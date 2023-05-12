@@ -14,8 +14,23 @@ VALUES ('soup'),
        ('potato'),
        ('chicken'),
        ('water');
+
 INSERT INTO RESTAURANT (name)
 VALUES ('Astoria'),
        ('Italian'),
        ('Tokio City'),
        ('U Gali');
+
+INSERT INTO MENU (id)
+VALUES (1),
+       (2),
+       (3),
+       (4);
+INSERT INTO MENU_DISH (menu_id, dish_id)
+VALUES (1, 1),
+       (1, 2),
+       (1, 3),
+       (2, 1),
+       (2, 2),
+       (2, 3),
+       (2, 4);
