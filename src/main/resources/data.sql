@@ -8,12 +8,6 @@ VALUES ('USER', 1),
        ('ADMIN', 2),
        ('USER', 2);
 
-INSERT INTO DISH (name)
-VALUES ('soup'),
-       ('tea'),
-       ('potato'),
-       ('chicken'),
-       ('water');
 
 INSERT INTO RESTAURANT (name)
 VALUES ('Astoria'),
@@ -21,16 +15,14 @@ VALUES ('Astoria'),
        ('Tokio City'),
        ('U Gali');
 
-INSERT INTO MENU (id)
+INSERT INTO MENU_RESTAURANT (rest_id)
 VALUES (1),
        (2),
        (3),
        (4);
-INSERT INTO MENU_DISH (menu_id, dish_id)
-VALUES (1, 1),
-       (1, 2),
-       (1, 3),
-       (2, 1),
-       (2, 2),
-       (2, 3),
-       (2, 4);
+
+INSERT INTO DISH_RESTAURANT (name, price,rest_id)
+VALUES ('soup',5,1),
+       ('tea',2, 1),
+       ('potato',6, 2),
+       ('chicken',8, 2);

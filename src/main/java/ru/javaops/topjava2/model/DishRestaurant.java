@@ -8,19 +8,20 @@ import lombok.Setter;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.List;
 
 @Entity
-@Table(name = "menu")
+@Table(name = "dish_restaurant")
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Menu extends BaseEntity implements Serializable {
+public class DishRestaurant extends NamedEntity implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    @ManyToMany
-    @JoinColumn(name = "dish_id")
-    private List<Dish> dish;
+    @ManyToOne
+    @JoinColumn(name = "rest_id")
+    private Restaurant restaurant;
 
+    @Column(name = "price")
+    private int price;
 }

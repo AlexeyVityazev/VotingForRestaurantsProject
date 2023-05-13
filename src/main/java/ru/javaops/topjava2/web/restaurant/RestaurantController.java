@@ -1,19 +1,19 @@
 package ru.javaops.topjava2.web.restaurant;
 
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import ru.javaops.topjava2.model.Dish;
+import org.springframework.web.bind.annotation.*;
 import ru.javaops.topjava2.model.Restaurant;
-import ru.javaops.topjava2.repository.BaseRepository;
-import ru.javaops.topjava2.repository.DishRepository;
 import ru.javaops.topjava2.repository.RestaurantRepository;
 
 import java.util.List;
+import java.util.Optional;
+
+import static ru.javaops.topjava2.util.validation.ValidationUtil.assureIdConsistent;
 
 @Slf4j
 @RestController
@@ -28,7 +28,31 @@ public class RestaurantController {
         log.info("getAll restaurants");
         return repository.findAll(Sort.by(Sort.Direction.ASC, "name"));
     }
-    @GetMapping("{rest_id}/date/{date}/menu")
-    public 
+
+    @GetMapping("/{id}")
+    public Restaurant get(@PathVariable int id) {
+        Optional<Restaurant> optional = repository.findById(id);
+        Restaurant restaurant = optional.get();
+        return restaurant;
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable int id) {
+        repository.deleteById(id);
+    }
+
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void update(@Valid @RequestBody Restaurant restaurant, @PathVariable int id) {
+        log.info("update {} with id={}", restaurant, id);
+        assureIdConsistent(restaurant, id);
+        repository.save(restaurant);
+    }
+
+    @PostMapping
+    public void saveRestaurant(Restaurant restaurant) {
+        repository.save(restaurant);
+    }
 
 }

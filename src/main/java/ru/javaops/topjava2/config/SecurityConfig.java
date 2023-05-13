@@ -56,9 +56,11 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests()
-                .requestMatchers("/api/admin/**").hasRole(Role.ADMIN.name())
+//                .requestMatchers("/api/admin/**").hasRole(Role.ADMIN.name())//TODO: restore
+                .requestMatchers("/api/admin/**").anonymous()//TODO: delete
                 .requestMatchers(HttpMethod.POST, "/api/profile").anonymous()
-                .requestMatchers("/api/**").authenticated()
+//                .requestMatchers("/api/**").authenticated() //TODO: restore
+                .requestMatchers("/api/**").anonymous() //TODO: delete
                 .and().httpBasic()
                 .authenticationEntryPoint(authenticationEntryPoint)
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
