@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.javaops.topjava2.model.MenuRestaurant;
 import ru.javaops.topjava2.repository.MenuRestaurantRepository;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -21,10 +24,13 @@ public class MenuRestaurantController {
     MenuRestaurantRepository repository;
 
     @GetMapping
-    public List<MenuRestaurant> getAllMenuForToday() {
+    public List<MenuRestaurant> getAllMenuForToday() throws ParseException {
         log.info("getAll menu for today");
-        Date date = new Date();
-        List<MenuRestaurant> allMenuByDate = repository.findMenusByDate(date);
+        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        Date today = new Date();
+        Date todayWithZeroTime = formatter.parse(formatter.format(today));
+
+        List<MenuRestaurant> allMenuByDate = repository.findMenusByDate(todayWithZeroTime);
         return allMenuByDate;
     }
 

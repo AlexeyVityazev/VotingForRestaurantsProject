@@ -33,7 +33,7 @@ public class MenuRestaurant extends BaseEntity implements Serializable {
     @JoinColumn(name = "rest_id")
     Restaurant restaurant;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "MENU_DISH",
             joinColumns = @JoinColumn(name = "menu_id"),
             inverseJoinColumns = @JoinColumn(name = "dish_id"))
@@ -43,7 +43,7 @@ public class MenuRestaurant extends BaseEntity implements Serializable {
     private int votes;
 
     public void increaseVote() {
-        //TODO implement
+        votes++;
     }
 
 }

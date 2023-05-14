@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import ru.javaops.topjava2.model.MenuRestaurant;
 
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 
@@ -18,7 +19,7 @@ public interface MenuRestaurantRepository extends JpaRepository<MenuRestaurant, 
 
     @Transactional
     @Modifying
-    @Query("SELECT e FROM MenuRestaurant e WHERE e.VOTES=:votes")
+    @Query("SELECT e FROM MenuRestaurant e WHERE e.votes=:votes")
     List<MenuRestaurant> findMenusByVotes(@Param("votes") Integer votes);
 
     @Transactional
