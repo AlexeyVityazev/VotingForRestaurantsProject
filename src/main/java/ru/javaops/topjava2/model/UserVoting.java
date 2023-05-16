@@ -10,7 +10,7 @@ import lombok.Setter;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "user_voting")
@@ -21,11 +21,14 @@ public class UserVoting extends BaseEntity implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
+    public UserVoting(User user, Restaurant restaurant) {
+        this.user = user;
+        this.restaurant = restaurant;
+    }
 
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
-
 
     @OneToOne
     @JoinColumn(name = "rest_id")
@@ -34,5 +37,5 @@ public class UserVoting extends BaseEntity implements Serializable {
     @Column(name = "date", nullable = false, columnDefinition = "date default now()", updatable = false)
     @NotNull
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Date date = new Date();
+    private LocalDate today = LocalDate.now();
 }

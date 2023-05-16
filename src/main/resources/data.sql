@@ -42,6 +42,5 @@ VALUES (1, 1),
        (2, 8);
 
 INSERT INTO USER_VOTING(user_id, rest_id)
-VALUES (1, 1),
-       (2, 3),
+VALUES  (2, 3),
        (3, 2);

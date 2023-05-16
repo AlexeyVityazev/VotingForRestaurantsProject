@@ -1,32 +1,62 @@
 package ru.javaops.topjava2.web.restaurant;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import ru.javaops.topjava2.model.MenuRestaurant;
-import ru.javaops.topjava2.repository.MenuRestaurantRepository;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
+import ru.javaops.topjava2.model.Restaurant;
+import ru.javaops.topjava2.model.User;
+import ru.javaops.topjava2.model.UserVoting;
+import ru.javaops.topjava2.repository.RestaurantRepository;
 import ru.javaops.topjava2.repository.UserVotingRepository;
+import ru.javaops.topjava2.web.AuthUser;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
+@Slf4j
 @RestController
 @RequestMapping(value = UserVotingController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserVotingController {
-    static final String REST_URL = "/api/users/vote";
-    private static final LocalTime DEADLINE_TIME = LocalTime.of(20, 0, 0);
     @Autowired
-    UserVotingRepository repository;
+    private RestaurantRepository restaurantRepository;
+    @Autowired
+    private UserVotingRepository userVotingRepository;
+    static final String REST_URL = "/api/users/vote";
+    private static LocalTime DEADLINE_TIME = LocalTime.of(11, 0, 0);
+    private LocalTime timeToday = LocalTime.now();
+    private LocalDate dayToday = LocalDate.now();
 
-    @GetMapping("/{rest_id}")
-    public void voteForRestaurant(@PathVariable int restId) {
+    @PostMapping("/{id}")
+    public void voteForRestaurant(@PathVariable int id, @AuthenticationPrincipal AuthUser authUser) {
+        if (timeToday.isBefore(DEADLINE_TIME)) {
+            int user_id = authUser.getUser().getId();
+            User user = authUser.getUser();
 
+            Optional<Restaurant> optionalRestaurant = restaurantRepository.findById(id);
+            Restaurant restaurant = optionalRestaurant.get();
+            boolean check = userVotingRepository.findByUserAndDate(user_id, dayToday).isPresent();
 
-//        if (LocalTime.now().isBefore(DEADLINE_TIME)) {
-//            menuRestaurant.increaseVote();
-//            repository.save(menuRestaurant);
+            if (!check) {
+                UserVoting votedUser = new UserVoting(user, restaurant);
+                userVotingRepository.save(votedUser);
+            } else {
+                Optional<UserVoting> optionalUserVoting = userVotingRepository.findByUserAndDate(user_id, dayToday);
+                UserVoting userVoting = optionalUserVoting.get();
+                userVoting.setRestaurant(restaurant);
+                userVotingRepository.save(userVoting);
+            }
         }
     }
+
+    @GetMapping
+    public List<UserVoting> getAll() {
+        log.info("getAll restaurants");
+        return userVotingRepository.findAll();
+    }
+}
+
+
