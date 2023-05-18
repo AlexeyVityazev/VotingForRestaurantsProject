@@ -19,7 +19,7 @@ import static ru.vityazev.voting.util.validation.ValidationUtil.assureIdConsiste
 @RestController
 @RequestMapping(value = DishRestaurantController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class DishRestaurantController {
-    static final String REST_URL = "/api/dish";
+    static final String REST_URL = "/api/admin/dish";
     @Autowired
     private DishRestaurantRepository repository;
 

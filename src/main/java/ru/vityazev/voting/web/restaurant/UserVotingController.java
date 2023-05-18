@@ -54,7 +54,7 @@ public class UserVotingController {
 
     @GetMapping
     public List<UserVoting> getAll() {
-        log.info("getAll restaurants");
+        log.info("getAll UserVoting");
         return userVotingRepository.findAll();
     }
 }
