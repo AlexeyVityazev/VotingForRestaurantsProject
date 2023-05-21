@@ -10,6 +10,7 @@ import lombok.Setter;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -18,14 +19,12 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MenuRestaurant extends BaseEntity implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 1L;
+public class MenuRestaurant extends BaseEntity{
 
     @Column(name = "date", nullable = false, columnDefinition = "date default now()", updatable = false)
     @NotNull
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Date date = new Date();
+    private LocalDate date = LocalDate.now();
 
     @OneToOne
     @JoinColumn(name = "rest_id")

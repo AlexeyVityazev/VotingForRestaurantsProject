@@ -12,6 +12,7 @@ import ru.vityazev.voting.repository.MenuRestaurantRepository;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -19,18 +20,16 @@ import java.util.List;
 @RestController
 @RequestMapping(value = MenuRestaurantController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class MenuRestaurantController {
-    static final String REST_URL = "/api/menuRestaurant";
+    static final String REST_URL = "/api/menu_restaurants";
     @Autowired
     MenuRestaurantRepository repository;
 
     @GetMapping
     public List<MenuRestaurant> getAllMenuForToday() throws ParseException {
         log.info("getAll menu for today");
-        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        Date today = new Date();
-        Date todayWithZeroTime = formatter.parse(formatter.format(today));
+        LocalDate date = LocalDate.now();
 
-        List<MenuRestaurant> allMenuByDate = repository.findMenusByDate(todayWithZeroTime);
+        List<MenuRestaurant> allMenuByDate = repository.findMenusByDate(date);
         return allMenuByDate;
     }
 

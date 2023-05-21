@@ -14,9 +14,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class DishRestaurant extends NamedEntity implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 1L;
+public class DishRestaurant extends NamedEntity {
 
     @ManyToOne
     @JoinColumn(name = "rest_id")

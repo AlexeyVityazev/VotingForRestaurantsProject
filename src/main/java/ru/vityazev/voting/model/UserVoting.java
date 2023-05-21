@@ -17,9 +17,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UserVoting extends BaseEntity implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 1L;
+public class UserVoting extends BaseEntity{
 
     public UserVoting(User user, Restaurant restaurant) {
         this.user = user;

@@ -25,7 +25,7 @@ public class UserVotingController {
     private RestaurantRepository restaurantRepository;
     @Autowired
     private UserVotingRepository userVotingRepository;
-    static final String REST_URL = "/api/users/vote";
+    static final String REST_URL = "/api/users/votes";
     private static LocalTime DEADLINE_TIME = LocalTime.of(11, 0, 0);
     private LocalTime timeToday = LocalTime.now();
     private LocalDate dayToday = LocalDate.now();
@@ -52,10 +52,11 @@ public class UserVotingController {
         }
     }
 
-    @GetMapping
-    public List<UserVoting> getAll() {
-        log.info("getAll UserVoting");
-        return userVotingRepository.findAll();
+    @GetMapping("/{id}")
+    public UserVoting get(@PathVariable int id) {
+        Optional<UserVoting> optional = userVotingRepository.findByUserAndDate(id,LocalDate.now());
+        UserVoting userVoting = optional.get();
+        return userVoting;
     }
 }
 

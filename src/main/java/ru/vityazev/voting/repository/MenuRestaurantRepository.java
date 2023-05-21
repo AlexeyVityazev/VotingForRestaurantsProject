@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import ru.vityazev.voting.model.MenuRestaurant;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -14,7 +15,7 @@ public interface MenuRestaurantRepository extends JpaRepository<MenuRestaurant, 
     @Transactional
     @Modifying
     @Query("SELECT e FROM MenuRestaurant e WHERE e.date=:date")
-    List<MenuRestaurant> findMenusByDate(@Param("date") Date date);
+    List<MenuRestaurant> findMenusByDate(@Param("date") LocalDate date);
 
     @Transactional
     @Modifying

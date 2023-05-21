@@ -15,7 +15,6 @@ import java.io.Serializable;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Restaurant extends NamedEntity implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 1L;
+public class Restaurant extends NamedEntity{
+
 }

@@ -27,8 +27,8 @@ import org.springframework.context.annotation.Configuration;
                         Сценарий:<br>
                                                 
                         0. Администратор добавляет меню для ресторанов на завтра //TODO in development <br>
-                        1. Пользователь смотрит на имеющиеся меню у ресторанов на сегодня <a href="#/dish-restaurant-controller/getAll_3">GET /api/admin/dish</a> <br>
-                        2. Пользователь голосует за понравившийся ресторан <a href="#/user-voting-controller/voteForRestaurant">POST /api/users/vote/{id}</a> <br>
+                        1. Пользователь смотрит на имеющиеся меню у ресторанов на сегодня <a target="_blank" href="#/dish-restaurant-controller/getAll_3">GET /api/admin/dish</a> <br>
+                        2. Пользователь голосует за понравившийся ресторан  <a target="_blank" href="#/user-voting-controller/voteForRestaurant">POST /api/users/vote/{id}</a> <br>
                         <br>
                         <p><b>Тестовые креденшелы:</b><br>
                         - user@yandex.ru / password<br>
