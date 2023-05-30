@@ -3,6 +3,7 @@ package ru.vityazev.voting.web.restaurant;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import ru.vityazev.voting.model.Restaurant;
@@ -26,14 +27,15 @@ public class UserVotingController {
     @Autowired
     private UserVotingRepository userVotingRepository;
     static final String REST_URL = "/api/users/votes";
-    private static LocalTime DEADLINE_TIME = LocalTime.of(9, 0, 0);
+    private static LocalTime DEADLINE_TIME = LocalTime.of(11, 0, 0);
     private LocalTime timeToday = LocalTime.now();
     private LocalDate dayToday = LocalDate.now();
 
     @PutMapping("/{id}")
-    public void voteForRestaurantOneMoreTime(@PathVariable int id, @AuthenticationPrincipal AuthUser authUser) {
-        int user_id = authUser.getUser().getId();
+    public void revote(@PathVariable int id, @AuthenticationPrincipal AuthUser authUser) {
         User user = authUser.getUser();
+        int user_id = user.getId();
+
         Optional<Restaurant> optionalRestaurant = restaurantRepository.findById(id);
         Restaurant restaurant = optionalRestaurant.get();
         boolean check = userVotingRepository.findByUserAndDate(user_id, dayToday).isPresent();
@@ -45,25 +47,24 @@ public class UserVotingController {
         }
     }
 
-    @GetMapping("/{id}")
-    public UserVoting get(@PathVariable int id) {
-        Optional<UserVoting> optional = userVotingRepository.findByUserAndDate(id, LocalDate.now());
-        UserVoting userVoting = optional.get();
-        return userVoting;
+    @GetMapping
+    ResponseEntity<UserVoting> get(@AuthenticationPrincipal AuthUser authUser) {
+        User user = authUser.getUser();
+        int user_id = user.getId();
+        return ResponseEntity.of(userVotingRepository.findByUserAndDate(user_id, LocalDate.now()));
     }
 
     @PostMapping("/{id}")
-    public void voteForRestaurantFirstTime(@PathVariable int id, @AuthenticationPrincipal AuthUser authUser) {
-        int user_id = authUser.getUser().getId();
+    public void vote(@PathVariable int id, @AuthenticationPrincipal AuthUser authUser) {
         User user = authUser.getUser();
+        int user_id = user.getId();
         boolean check = userVotingRepository.findByUserAndDate(user_id, dayToday).isPresent();
         Optional<Restaurant> optionalRestaurant = restaurantRepository.findById(id);
         Restaurant restaurant = optionalRestaurant.get();
         if (!check) {
-            if (!check) {
+
                 UserVoting votedUser = new UserVoting(user, restaurant);
                 userVotingRepository.save(votedUser);
-            }
         }
     }
 }

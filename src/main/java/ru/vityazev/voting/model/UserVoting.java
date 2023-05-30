@@ -13,7 +13,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "user_voting")
+@Table(name = "vote")
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

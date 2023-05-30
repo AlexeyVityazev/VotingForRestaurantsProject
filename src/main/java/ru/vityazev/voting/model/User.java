@@ -62,6 +62,7 @@ public class User extends NamedEntity implements HasIdAndEmail, Serializable {
     private Set<Role> roles;
 
     public User(User u) {
+
         this(u.id, u.name, u.email, u.password, u.enabled, u.registered, u.roles);
     }
 
