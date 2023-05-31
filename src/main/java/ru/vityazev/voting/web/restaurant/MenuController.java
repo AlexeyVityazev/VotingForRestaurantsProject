@@ -49,14 +49,15 @@ public class MenuController {
     public void saveItem(@Valid @RequestBody MenuTo menuTo) {
         log.info("save menuItem {} ", menuTo);
         Optional<Restaurant> optional = restaurantRepository.findById(menuTo.getIdRestaurant());
-        Restaurant restaurant = optional.get();
-
         Optional<Dish> optionalDish = dishRepository.findById(menuTo.getIdDish());
-        Dish dish = optionalDish.get();
-        LocalDate localDate = menuTo.getDate();
+        if(optional.isPresent() && optionalDish.isPresent()) {
+            Restaurant restaurant = optional.get();
+            Dish dish = optionalDish.get();
+            LocalDate localDate = menuTo.getDate();
 
-        MenuItem menuItem1 = new MenuItem(localDate,restaurant,dish);
-        repository.save(menuItem1);
+            MenuItem menuItem1 = new MenuItem(localDate, restaurant, dish);
+            repository.save(menuItem1);
+        }
     }
 
 }

@@ -17,7 +17,7 @@ import ru.vityazev.voting.util.validation.NoHtml;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class Dish extends BaseEntity {
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "rest_id", nullable = false)
     private Restaurant restaurant;
 

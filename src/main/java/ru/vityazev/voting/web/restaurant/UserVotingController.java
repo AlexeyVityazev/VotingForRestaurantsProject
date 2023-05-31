@@ -15,7 +15,6 @@ import ru.vityazev.voting.web.AuthUser;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -27,44 +26,41 @@ public class UserVotingController {
     @Autowired
     private UserVotingRepository userVotingRepository;
     static final String REST_URL = "/api/users/votes";
-    private static LocalTime DEADLINE_TIME = LocalTime.of(11, 0, 0);
-    private LocalTime timeToday = LocalTime.now();
-    private LocalDate dayToday = LocalDate.now();
+    private static LocalTime DEADLINE_TIME = LocalTime.of(11, 00, 0);
 
     @PutMapping("/{id}")
     public void revote(@PathVariable int id, @AuthenticationPrincipal AuthUser authUser) {
         User user = authUser.getUser();
-        int user_id = user.getId();
-
+        LocalDate dayToday = LocalDate.now();
+        LocalTime timeToday = LocalTime.now();
         Optional<Restaurant> optionalRestaurant = restaurantRepository.findById(id);
-        Restaurant restaurant = optionalRestaurant.get();
-        boolean check = userVotingRepository.findByUserAndDate(user_id, dayToday).isPresent();
-        if (timeToday.isBefore(DEADLINE_TIME) && check) {
-            Optional<UserVoting> optionalUserVoting = userVotingRepository.findByUserAndDate(user_id, dayToday);
-            UserVoting userVoting = optionalUserVoting.get();
-            userVoting.setRestaurant(restaurant);
-            userVotingRepository.save(userVoting);
+        Optional<UserVoting> optionalUserVoting = userVotingRepository.findByUserAndDate(user.getId(), dayToday);
+        boolean check = optionalUserVoting.isPresent();
+        if (optionalRestaurant.isPresent() && optionalUserVoting.isPresent()) {
+            if (timeToday.isBefore(DEADLINE_TIME) && check) {
+                UserVoting userVoting = optionalUserVoting.get();
+                userVoting.setRestaurant(optionalRestaurant.get());
+                userVotingRepository.save(userVoting);
+            }
         }
     }
 
     @GetMapping
     ResponseEntity<UserVoting> get(@AuthenticationPrincipal AuthUser authUser) {
         User user = authUser.getUser();
-        int user_id = user.getId();
-        return ResponseEntity.of(userVotingRepository.findByUserAndDate(user_id, LocalDate.now()));
+        int userId = user.getId();
+        return ResponseEntity.of(userVotingRepository.findByUserAndDate(userId, LocalDate.now()));
     }
 
     @PostMapping("/{id}")
     public void vote(@PathVariable int id, @AuthenticationPrincipal AuthUser authUser) {
         User user = authUser.getUser();
-        int user_id = user.getId();
-        boolean check = userVotingRepository.findByUserAndDate(user_id, dayToday).isPresent();
-        Optional<Restaurant> optionalRestaurant = restaurantRepository.findById(id);
-        Restaurant restaurant = optionalRestaurant.get();
+        LocalDate dayToday = LocalDate.now();
+        boolean check = userVotingRepository.findByUserAndDate(user.getId(), dayToday).isPresent();
         if (!check) {
-
-                UserVoting votedUser = new UserVoting(user, restaurant);
-                userVotingRepository.save(votedUser);
+            restaurantRepository.findById(id)
+                    .map(restaurant -> new UserVoting(user, restaurant))
+                    .ifPresent(votedUser -> userVotingRepository.save(votedUser));
         }
     }
 }

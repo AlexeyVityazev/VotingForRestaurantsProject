@@ -9,13 +9,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Entity
 @Table(name = "menu")
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PUBLIC) //TODO return PROTECTED
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MenuItem extends BaseEntity {
 
     @Column(name = "date", nullable = false)
@@ -23,11 +22,11 @@ public class MenuItem extends BaseEntity {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDate date;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "rest_id", nullable = false)
     private Restaurant restaurant;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "dish_id", nullable = false)
     private Dish dish;
 
@@ -36,12 +35,4 @@ public class MenuItem extends BaseEntity {
         this.restaurant = restaurant;
         this.dish = dish;
     }
-
-    //    @ManyToMany(fetch = FetchType.EAGER)
-//    @JoinTable(name = "MENU_DISH",
-//            joinColumns = @JoinColumn(name = "menu_id"),
-//            inverseJoinColumns = @JoinColumn(name = "dish_id"))
-//
-//   private List<Dish> dishes;
-
 }

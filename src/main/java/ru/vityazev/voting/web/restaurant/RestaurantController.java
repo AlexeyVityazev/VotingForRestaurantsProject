@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.vityazev.voting.model.Restaurant;
 import ru.vityazev.voting.repository.RestaurantRepository;
@@ -30,15 +31,15 @@ public class RestaurantController {
     }
 
     @GetMapping("/{id}")
-    public Restaurant get(@PathVariable int id) {
-        Optional<Restaurant> optional = repository.findById(id);
-        Restaurant restaurant = optional.get();
-        return restaurant;
+    public ResponseEntity<Restaurant> get(@PathVariable int id) {
+        log.info("get restaurants by id");
+        return ResponseEntity.of(repository.findById(id));
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id) {
+        log.info("delete restaurants");
         repository.deleteById(id);
     }
 
@@ -52,6 +53,7 @@ public class RestaurantController {
 
     @PostMapping
     public void saveRestaurant(Restaurant restaurant) {
+        log.info("save restaurants");
         repository.save(restaurant);
     }
 

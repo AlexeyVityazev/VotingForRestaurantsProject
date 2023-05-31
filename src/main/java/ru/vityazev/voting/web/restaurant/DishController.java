@@ -3,9 +3,9 @@ package ru.vityazev.voting.web.restaurant;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.vityazev.voting.model.Dish;
 import ru.vityazev.voting.model.Restaurant;
@@ -15,8 +15,6 @@ import ru.vityazev.voting.to.DishTo;
 
 import java.util.List;
 import java.util.Optional;
-
-import static ru.vityazev.voting.util.validation.ValidationUtil.assureIdConsistent;
 
 @Slf4j
 @RestController
@@ -29,42 +27,36 @@ public class DishController {
     private RestaurantRepository restaurantRepository;
 
     @GetMapping("/by-restaurant-name")
-    public List<Dish> getAllRestaurantDishes(@RequestParam String name) {
+    public ResponseEntity<List<Dish>> getAllRestaurantDishes(@RequestParam String restaurantName) {
         log.info("get Restaurant dishes");
-        return repository.findRestaurantDishes(name);
+        return ResponseEntity.ok(repository.findRestaurantDishes(restaurantName));
     }
 
-    @GetMapping("/{id}")
-    public Dish get(@PathVariable int id) {
-        log.info("get dish with id={}", id);
-        Optional<Dish> optional = repository.findById(id);
-        Dish dish = optional.get();
-        return dish;
+    @GetMapping("/{dishId}")
+    public ResponseEntity<Dish> get(@PathVariable int dishId) {
+        log.info("get dish with id={}", dishId);
+        return ResponseEntity.of(repository.findById(dishId));
     }
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@Valid @RequestBody DishTo dishTo) {
-        log.info("delete dish name={}, Restaurant name={}", dishTo.getDishName(),dishTo.getRestaurantName());
+        log.info("delete dish name={}, Restaurant name={}", dishTo.getDishName(), dishTo.getRestaurantName());
         Optional<Restaurant> optional = restaurantRepository.findByName(dishTo.getRestaurantName());
-        Restaurant restaurant = optional.get();
-        repository.deleteByDishAndRestaurantId(dishTo.getDishName(), restaurant.id());
+        if(optional.isPresent()) {
+            Restaurant restaurant = optional.get();
+            repository.deleteByDishAndRestaurantId(dishTo.getDishName(), restaurant.id());
+        }
     }
-
-//    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-//    @ResponseStatus(HttpStatus.NO_CONTENT)
-//    public void update(@Valid @RequestBody Dish dish, @PathVariable int id) {
-//        log.info("update {} with id={}", dish, id);
-//        assureIdConsistent(dish, id);
-//        repository.save(dish);
-//    }
 
     @PostMapping
     public void saveDish(@Valid @RequestBody DishTo dishTo) {
         log.info("save dish {} ", dishTo);
         Optional<Restaurant> optional = restaurantRepository.findByName(dishTo.getRestaurantName());
-        Restaurant restaurant = optional.get();
-        Dish dish = new Dish(restaurant, dishTo.getDishPrice(), dishTo.getDishName());
-        repository.save(dish);
+        if(optional.isPresent()) {
+            Restaurant restaurant = optional.get();
+            Dish dish = new Dish(restaurant, dishTo.getDishPrice(), dishTo.getDishName());
+            repository.save(dish);
+        }
     }
 }
